@@ -7,7 +7,7 @@ import re
 with open("enable1.txt") as enable:
     l = []
     for line in enable:
-        l.append(line.replace(r"\n",""))
+        l.append(line)
     l = [i.strip() for i in l]
 
 class WordInfo:
