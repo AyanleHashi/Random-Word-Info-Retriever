@@ -2,7 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 from random import randint
 import re
-import ast
 
 #Convert 'enable1.txt' to list form
 with open("enable1.txt") as enable:
@@ -10,7 +9,7 @@ with open("enable1.txt") as enable:
     for line in enable:
         l.append(line)
     l = [i.strip() for i in l]
-
+    
 class WordInfo:
     def __init__(self, wordList):
         self.wordList = wordList
@@ -27,7 +26,7 @@ class WordInfo:
                 #Get dictionary.com
                 link = "http://www.dictionary.com/browse/"+word
                 site = requests.get(link).text
-                soup = BeautifulSoup(site)
+                soup = BeautifulSoup(site,"lxml")
                 divs = soup.findAll("div", {"class":"def-content"})
                 pos = soup.findAll("span", {"class":"dbox-pg"})
                 #Remove HTML formatting from extracted text
@@ -36,12 +35,12 @@ class WordInfo:
                 break
             except IndexError:
                 word = self.randWord()
-        return "Word: " + word + "\n\nPart of Speech: " + pos + "\n\nDefinition: " + definition
+        return "\nWord: " + word + "\n\nPart of Speech: " + pos + "\n\nDefinition: " + definition
     
     def synonyms(self, word):
         link = "http://www.thesaurus.com/browse/"+word
         site = requests.get(link).text
-        soup = BeautifulSoup(site)
+        soup = BeautifulSoup(site,"lxml")
         spans = soup.findAll("span", {"class":"text"})
         spans = [re.sub("<[^>]+?>","",str(x)).strip() for x in spans]
         return "\nSynonyms: " + ", ".join(spans[0:3])
