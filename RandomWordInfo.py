@@ -44,10 +44,9 @@ class WordInfo:
         soup = BeautifulSoup(site)
         spans = soup.findAll("span", {"class":"text"})
         spans = [re.sub("<[^>]+?>","",str(x)).strip() for x in spans]
-        return spans
+        return "\nSynonyms: " + ", ".join(spans[0:3])
 
 w = WordInfo(l)
-word = w.randWord()
-
+word = raw_input("Enter a word: ")
 print w.definition(word)
-print w.synonyms("contaminate")
+print w.synonyms(word)
