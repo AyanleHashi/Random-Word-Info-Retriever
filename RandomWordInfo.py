@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from random import randint
 import re
+import ast
 
 #Convert 'enable1.txt' to list form
 with open("enable1.txt") as enable:
@@ -36,6 +37,17 @@ class WordInfo:
             except IndexError:
                 word = self.randWord()
         return "Word: " + word + "\n\nPart of Speech: " + pos + "\n\nDefinition: " + definition
+    
+    def synonyms(self, word):
+        link = "http://www.thesaurus.com/browse/"+word
+        site = requests.get(link).text
+        soup = BeautifulSoup(site)
+        spans = soup.findAll("span", {"class":"text"})
+        spans = [re.sub("<[^>]+?>","",str(x)).strip() for x in spans]
+        return spans
 
 w = WordInfo(l)
-print w.definition(w.randWord())
+word = w.randWord()
+
+print w.definition(word)
+print w.synonyms("contaminate")
