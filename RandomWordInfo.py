@@ -51,14 +51,15 @@ class WordInfo:
         if len(found) > 100:
             yn = raw_input("Found " + str(len(found)) + " matches, " + "print them all? (Y/N): ")
             if yn in "Yy":
-                return "Found: " + ", ".join(found)
+                return "Found " + str(len(found)) + " results: " + ", ".join(found)
             else:
                 return
         else:
-            return "Found: " + ", ".join(found)
+            return "Found " + str(len(found)) + " results: " + ", ".join(found)
 
+#Example run:
 w = WordInfo(l)
-word = raw_input("Enter a word: ")
+word = w.randWord()
 print w.definition(word)
 print w.synonyms(word)
-print w.regexFind("b")
+print w.regexFind("r[^aeiou]")
