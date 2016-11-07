@@ -51,7 +51,7 @@ class WordInfo:
         return "Found: " + ", ".join(found)
 
 w = WordInfo(l)
-#word = raw_input("Enter a word: ")
-#print w.definition(word)
-#print w.synonyms(word)
+word = raw_input("Enter a word: ")
+print w.definition(word)
+print w.synonyms(word)
 print w.regexFind("q[^u]")
