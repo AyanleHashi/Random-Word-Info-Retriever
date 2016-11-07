@@ -44,8 +44,14 @@ class WordInfo:
         spans = soup.findAll("span", {"class":"text"})
         spans = [re.sub("<[^>]+?>","",str(x)).strip() for x in spans]
         return "\nSynonyms: " + ", ".join(spans[0:3])
+    
+    def regexFind(self,pattern):
+        r = re.compile(pattern)
+        found = filter(r.match,self.wordList)
+        return "Found: " + ", ".join(found)
 
 w = WordInfo(l)
-word = raw_input("Enter a word: ")
-print w.definition(word)
-print w.synonyms(word)
+#word = raw_input("Enter a word: ")
+#print w.definition(word)
+#print w.synonyms(word)
+print w.regexFind("q[^u]")
