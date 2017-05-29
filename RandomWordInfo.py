@@ -11,9 +11,15 @@ with open("enable1.txt") as enable:
     l = [i.strip() for i in l]
     
 class WordInfo:
-    def __init__(self, wordList):
-        self.wordList = wordList
-    
+    def __init__(self):
+        with open("enable1.txt") as enable:
+            self.l = []
+            for line in enable:
+                self.l.append(line)
+            self.l = [i.strip() for i in self.l]
+        
+        self.wordList = self.l
+            
     def randWord(self):
         #Prints a random word from the inputted word list
         return self.wordList[randint(0,len(self.wordList)-1)]
@@ -38,14 +44,18 @@ class WordInfo:
         return "\nWord: " + word + "\n\nPart of Speech: " + pos + "\n\nDefinition: " + definition
     
     def synonyms(self, word):
-        link = "http://www.thesaurus.com/browse/"+word
-        site = requests.get(link).text
-        soup = BeautifulSoup(site,"lxml")
-        spans = soup.findAll("span", {"class":"text"})
-        spans = [re.sub("<[^>]+?>","",str(x)).strip() for x in spans]
-        return "\nSynonyms: " + ", ".join(spans[0:3])
+        site = requests.get("http://www.synonym.com/synonyms/" + word,"lxml")
+        soup = BeautifulSoup(site.text)
+        syn = soup.findAll("li",{"class" : "syn"})
+        syns = []
+        for i in syn:
+            href = BeautifulSoup(str(i)).findAll("a",{"href" : lambda x: x and "/synonyms/" in x})[0]
+            syns.append(href.text)
+            
+        return "Synonyms: " + ", ".join(syns[:10])
     
     def regexFind(self,pattern):
+        #Compile the pattern and search through the inputted list for matches
         r = re.compile(pattern)
         found = filter(r.match,self.wordList)
         if len(found) > 100:
@@ -53,13 +63,11 @@ class WordInfo:
             if yn in "Yy":
                 return "Found " + str(len(found)) + " results: " + ", ".join(found)
             else:
-                return
+                return "Did not print."
         else:
             return "Found " + str(len(found)) + " results: " + ", ".join(found)
-
-#Example run:
-w = WordInfo(l)
-word = w.randWord()
-print w.definition(word)
-print w.synonyms(word)
-print w.regexFind("r[^aeiou]")
+    
+    def wordVariations(self,word):
+        r = re.compile(word)
+        found= filter(r.match,self.wordList)
+        return "Found " + ", ".join(found)
